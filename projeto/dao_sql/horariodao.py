@@ -1,5 +1,6 @@
 from dao_sql.dao import DAO
 from models.horario import Horario
+from datetime import datetime
 
 class HorarioDAO(DAO):
     @classmethod
@@ -9,7 +10,7 @@ class HorarioDAO(DAO):
             INSERT INTO horario (data, confirmado, id_cliente, id_servico, id_profissional)
             VALUES (?, ?, ?, ?, ?)
         """
-        cls.execute(sql, (obj.get_data(), obj.get_confirmado(), obj.get_id_cliente(), obj.get_id_servico(), obj.get_id_profissional()))
+        cls.execute(sql, (obj.get_data().strftime("%d/%m/%Y %H:%M"), obj.get_confirmado(), obj.get_id_cliente(), obj.get_id_servico(), obj.get_id_profissional()))
         cls.fechar()
 
 
@@ -19,7 +20,16 @@ class HorarioDAO(DAO):
         sql = "SELECT * FROM horario"
         cursor = cls.execute(sql)
         rows = cursor.fetchall()
-        objs = [Horario(id, data, confirmado, id_cliente, id_servico, id_profissional) for (id, data, confirmado, id_cliente, id_servico, id_profissional) in rows]
+        objs = []
+        for (id, data, confirmado, id_cliente, id_servico, id_profissional) in rows:
+            
+            data = datetime.strptime(data, "%d/%m/%Y %H:%M")
+            obj = Horario(id, data)
+            obj.set_confirmado(confirmado)
+            obj.set_id_cliente(id_cliente)
+            obj.set_id_servico(id_servico)
+            obj.set_id_profissional(id_profissional)
+            objs.append(obj)
         cls.fechar()
         return objs
 
@@ -29,7 +39,18 @@ class HorarioDAO(DAO):
         sql = "SELECT * FROM horario WHERE id = ?"
         cursor = cls.execute(sql, (id,))
         row = cursor.fetchone()
-        obj = Horario(*row) if row else None
+        if row:
+            id, data, confirmado, id_cliente, id_servico, id_profissional = row
+            data = datetime.strptime(data, "%d/%m/%Y %H:%M")
+
+            obj = Horario(id, data)
+            obj.set_confirmado(confirmado)
+            obj.set_id_cliente(id_cliente)
+            obj.set_id_servico(id_servico)
+            obj.set_id_profissional(id_profissional)
+        else:
+            obj = None
+
         cls.fechar()
         return obj
 
@@ -40,7 +61,7 @@ class HorarioDAO(DAO):
             UPDATE horario SET data=?, confirmado=?, id_cliente=?, id_servico=?, id_profissional=?
             WHERE id=?
         """
-        cls.execute(sql, (obj.get_data(), obj.get_confirmado(), obj.get_id_cliente(), obj.get_id_servico(), obj.get_id_profissional(), obj.get_id()))
+        cls.execute(sql, (obj.get_data().strftime("%d/%m/%Y %H:%M"), obj.get_confirmado(), obj.get_id_cliente(), obj.get_id_servico(), obj.get_id_profissional(), obj.get_id()))
         cls.fechar()
 
     @classmethod

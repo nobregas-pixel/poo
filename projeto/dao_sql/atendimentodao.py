@@ -1,5 +1,6 @@
 from dao_sql.dao import DAO
 from models.atendimento import Atendimento
+from datetime import datetime 
 
 class AtendimentoDAO(DAO):
     @classmethod
@@ -9,7 +10,7 @@ class AtendimentoDAO(DAO):
             INSERT INTO atendimento (data, queixa_principal, historico_saude, avaliacao, prescricao, id_horario)
             VALUES (?, ?, ?, ?, ?, ?)
         """
-        cls.execute(sql, (obj.get_data(), obj.get_queixa_principal(), obj.get_historico_saude(), obj.get_avaliacao(), obj.get_prescricao(), obj.get_id_horario()))
+        cls.execute(sql, (obj.get_data().strftime("%d/%m/%Y %H:%M"), obj.get_queixa_principal(), obj.get_historico_saude(), obj.get_avaliacao(), obj.get_prescricao(), obj.get_id_horario()))
         cls.fechar()
 
 
@@ -19,7 +20,13 @@ class AtendimentoDAO(DAO):
         sql = "SELECT * FROM atendimento"
         cursor = cls.execute(sql)
         rows = cursor.fetchall()
-        objs = [Atendimento(id, data, queixa_principal, historico_saude, avaliacao, prescricao, id_horario) for (id, data, queixa_principal, historico_saude, avaliacao, prescricao, id_horario) in rows]
+        objs = []
+        for (id, data, queixa_principal, historico_saude, avaliacao, prescricao, id_horario) in rows:
+                    
+            data = datetime.strptime(data, "%d/%m/%Y %H:%M")
+            obj = Atendimento(id, data, queixa_principal, historico_saude, avaliacao, prescricao, id_horario)
+            obj.set_id_horario(id_horario)
+            objs.append(obj)
         cls.fechar()
         return objs
 
@@ -40,7 +47,7 @@ class AtendimentoDAO(DAO):
             UPDATE atendimento SET data=?, queixa_principal=?, historico_saude=?, avaliacao=?, prescricao=?, id_horario=?
             WHERE id=?
         """
-        cls.execute(sql, (obj.get_data(), obj.get_queixa_principal(), obj.get_historico_saude(), obj.get_avaliacao(), obj.get_prescricao(), obj.get_id_horario(), obj.get_id()))
+        cls.execute(sql, (obj.get_data().strftime("%d/%m/%Y %H:%M"), obj.get_queixa_principal(), obj.get_historico_saude(), obj.get_avaliacao(), obj.get_prescricao(), obj.get_id_horario(), obj.get_id()))
         cls.fechar()
 
     @classmethod
