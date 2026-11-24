@@ -15,6 +15,10 @@ from templates.visualizarminhaagendaui import VisualizarMinhaAgendaUI
 from templates.confirmarservicoui import ConfirmarServicoUI
 from service import Service
 import streamlit as st
+from dao_sql.database import Database
+
+Database.abrir()
+Database.criar_tabelas()
 
 class IndexUI:
 

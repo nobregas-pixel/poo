@@ -28,6 +28,7 @@ class ManterProfissionalUI:
         foto = st.file_uploader("Selecione a foto", type=["png", "jpg", "jpeg"])
         senha = st.text_input("Informe a senha", type="password")
         if st.button("Inserir"):
+            foto = foto.name if foto else None
             Service.profissional_inserir(nome, email, especialidade, senha, foto)
             st.success("Profissional inserido com sucesso")
             time.sleep(2)
@@ -46,6 +47,7 @@ class ManterProfissionalUI:
 
             if st.button("Atualizar"):
                 id = op.get_id()
+                foto = foto.name if foto else None
                 Service.profissional_atualizar(id, nome, email, especialidade, senha, foto)
                 st.success("Profissional atualizado com sucesso")
                 time.sleep(2)

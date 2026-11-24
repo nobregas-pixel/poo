@@ -26,6 +26,7 @@ class ManterClienteUI:
         foto = st.file_uploader("Selecione a foto", type=["png", "jpg", "jpeg"])
         senha = st.text_input("Informe a senha", type="password")
         if st.button("Inserir"):
+            foto = foto.name if foto else None
             Service.cliente_inserir(nome, email, fone, senha, foto)
             st.success("Cliente inserido com sucesso")
             time.sleep(2)
@@ -42,6 +43,7 @@ class ManterClienteUI:
             senha = st.text_input("Nova senha", op.get_senha(), type="password")
             if st.button("Atualizar"):
                 id = op.get_id()
+                foto = foto.name if foto else None
                 Service.cliente_atualizar(id, nome, email, fone, senha, foto)
                 st.success("Cliente atualizado com sucesso")
                 time.sleep(2)
