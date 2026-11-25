@@ -28,9 +28,13 @@ class Database:
                 nome TEXT NOT NULL,
                 email TEXT NOT NULL,
                 fone TEXT,
-                senha TEXT NOT NULL
+                senha TEXT NOT NULL,
+                foto TEXT
             );
+
         """)
+        
+
 
         # --------------------- Tabela Profissional ---------------------
         cls.execute("""
@@ -39,7 +43,8 @@ class Database:
                 nome TEXT NOT NULL,
                 email TEXT NOT NULL,
                 especialidade TEXT NULL,
-                senha TEXT NOT NULL
+                senha TEXT NOT NULL,
+                foto TEXT
             );
         """)
 

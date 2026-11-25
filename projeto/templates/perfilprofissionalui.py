@@ -9,10 +9,11 @@ class PerfilProfissionalUI:
         nome = st.text_input("Informe o novo nome", op.get_nome())
         email = st.text_input("Informe o novo e-mail", op.get_email())
         especialidade = st.text_input("Informe a nova especialidade", op.get_especialidade())
+        foto = st.file_uploader("Selecione a foto", type=["png", "jpg", "jpeg"], key=f"foto_{op.get_id()}")
         senha = st.text_input("Informe a nova senha", op.get_senha(),type="password")
         if st.button("Atualizar"):
             id = op.get_id()
-            Service.profissional_atualizar(id, nome, email, especialidade, senha)
+            Service.profissional_atualizar(id, nome, email, especialidade, senha, foto)
             st.success("Profissional atualizado com sucesso")
             time.sleep(2)
             st.rerun()
